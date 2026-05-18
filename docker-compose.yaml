@@ -1,0 +1,47 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: agentgate
+      POSTGRES_PASSWORD: agentgate
+      POSTGRES_DB: agentgate
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  gw:
+    build: .
+    ports:
+      - "8443:8443"
+    environment:
+      AGENTGATE_DB_HOST: postgres
+      AGENTGATE_DB_PORT: "5432"
+      AGENTGATE_DB_USER: agentgate
+      AGENTGATE_DB_PASSWORD: agentgate
+      AGENTGATE_DB_NAME: agentgate
+      AICG_PUBLIC_BASE_URL: ${AICG_PUBLIC_BASE_URL:-https://localhost:8443}
+      AICG_TLS_CERT: /certs/server.crt
+      AICG_TLS_KEY: /certs/server.key
+      AICG_CONFIG_POOLS: ${AICG_CONFIG_POOLS:-/configs/pools.yaml}
+      AICG_CONFIG_PRICING: ${AICG_CONFIG_PRICING:-/configs/pricing.yaml}
+      AICG_CONFIG_POLICY: ${AICG_CONFIG_POLICY:-/configs/policies/main.yaml}
+      AICG_CONFIG_USERS: ${AICG_CONFIG_USERS:-/configs/identity/users.yaml}
+      AICG_CONFIG_TEAMS: ${AICG_CONFIG_TEAMS:-/configs/identity/teams.yaml}
+      AICG_CONFIG_REPOS: ${AICG_CONFIG_REPOS:-/configs/identity/repos.yaml}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-sk-ant-dummy-key-for-dogfood}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-sk-openai-dummy-key-for-dogfood}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-sk-deepseek-dummy-key-for-dogfood}
+      BIGMODEL_API_KEY: ${BIGMODEL_API_KEY:-sk-bigmodel-dummy-key-for-dogfood}
+    volumes:
+      - ./certs:/certs:ro
+      - ${AICG_EXTRA_CONFIG_DIR:-./configs}:/configs:ro
+      - ./configs/secrets:/run/agentgate/secrets:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:

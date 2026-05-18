@@ -1,0 +1,45 @@
+# policies/main.yaml — P0 MVP policy rules
+# Only `action: route` and `action: allow` are valid in P0.
+# block / redact / require_approval / shadow_eval → P1+.
+
+version: 1
+defaults:
+  on_no_match:
+    action: route
+    model_pool: standard
+    reasons: ["default-fallthrough"]
+
+degradation:
+  allowed_capabilities: ["cache_control", "extended_thinking"]
+
+rules:
+  - id: P-ROUTE-001
+    description: "summary / test_output / repo_search → cheap"
+    priority: 500
+    when: |
+      server_class.task_type in ["summary","test_output","repo_search"]
+      && task_hints.data_sensitivity != "high"
+    action: route
+    model_pool: cheap
+    reasons: ["low-complexity-to-cheap"]
+
+  - id: P-ROUTE-002
+    description: "code_edit / simple_edit / planning → standard"
+    priority: 500
+    when: |
+      server_class.task_type in ["code_edit","simple_edit","planning"]
+    action: route
+    model_pool: standard
+    reasons: ["standard-work-to-standard"]
+
+  - id: P-ROUTE-003
+    description: "architecture / debug / security_review → strong"
+    priority: 500
+    when: |
+      server_class.task_type in ["architecture","debug","security_review"]
+    action: route
+    model_pool: strong
+    reasons: ["complex-work-to-strong"]
+
+variables:
+  restricted_repos: []

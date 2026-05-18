@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "client": {
+    "lp_version": "0.1.0",
+    "os": "darwin",
+    "arch": "arm64"
+  },
+  "identity": {
+    "user_id": "dogfood-dev-1",
+    "team_id": "dogfood",
+    "machine_id": "test-machine-01"
+  },
+  "agent": {
+    "tool": "claude_code",
+    "tool_version": "1.0.0",
+    "wire_protocol": "anthropic_messages"
+  },
+  "session": {
+    "session_id": "test-session-conformance-001",
+    "turn_index": 3,
+    "is_continuation": true
+  },
+  "repo": {
+    "repo_id": "dogfood-service",
+    "remote_url": "https://github.com/org/dogfood-service",
+    "branch": "feature/add-logging",
+    "head_sha": "abc123def456",
+    "is_dirty": false
+  },
+  "context_signals": {
+    "file_paths": ["src/handler.go", "src/utils.go"],
+    "file_fingerprints": [
+      {"path": "src/handler.go", "size_bytes": 2048, "sha256": "abcdef", "language": "go"},
+      {"path": "src/utils.go", "size_bytes": 512, "sha256": "123456", "language": "go"}
+    ],
+    "diff_summary": {
+      "lines_added": 45,
+      "lines_removed": 12,
+      "contains_test_failure_keyword": false,
+      "contains_stack_trace": false
+    },
+    "primary_language": "go"
+  },
+  "task_hints": {
+    "task_type": "code_edit",
+    "complexity": "medium",
+    "data_sensitivity": "low",
+    "agentic_loop": true,
+    "contains_secret_like_pattern": false,
+    "contains_pii_like_pattern": false,
+    "security_sensitive_area": false,
+    "routing_hints": [],
+    "confidence": {
+      "task_type": 0.9,
+      "complexity": 0.7,
+      "data_sensitivity": 0.95
+    }
+  }
+}

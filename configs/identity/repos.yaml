@@ -1,0 +1,12 @@
+# repos.yaml — repo identity and routing preferences
+
+repos:
+  - repo_id: agentgate
+    remote_url: "https://github.com/org/agentgate"
+    default_team_id: platform
+    restricted: false
+
+  - repo_id: dogfood-service
+    remote_url: "https://github.com/org/dogfood-service"
+    default_team_id: dogfood
+    restricted: false

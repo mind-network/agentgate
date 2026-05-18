@@ -1,0 +1,23 @@
+version: 1
+defaults:
+  on_no_match:
+    action: route
+    model_pool: standard
+    reasons: ["default-fallthrough"]
+rules:
+  - id: P-ROUTE-001
+    description: "summary / test_output → cheap"
+    priority: 500
+    when: |
+      server_class.task_type in ["summary","test_output"]
+    action: route
+    model_pool: cheap
+    reasons: ["low-complexity-to-cheap"]
+  - id: P-ROUTE-002
+    description: "code_edit / simple_edit → standard"
+    priority: 500
+    when: |
+      server_class.task_type in ["code_edit","simple_edit"]
+    action: route
+    model_pool: standard
+    reasons: ["standard-work-to-standard"]

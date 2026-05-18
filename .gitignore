@@ -1,0 +1,10 @@
+.cache/
+.env
+certs/
+.handoff-orchestrator/
+
+# build outputs
+/aicg-gw
+/aicg-lp
+/aicg-db
+/aicg-db

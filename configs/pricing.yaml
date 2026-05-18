@@ -1,0 +1,116 @@
+# pricing.yaml — per-model pricing (cents per 1k tokens, in model's currency)
+
+models:
+  - vendor: anthropic
+    model: claude-opus-4-7
+    currency: usd
+    input_price_per_1k_tokens: 15.00
+    output_price_per_1k_tokens: 75.00
+    cache_read_price_per_1k_tokens: 1.50
+    cache_create_price_per_1k_tokens: 18.75
+    capabilities:
+      tools: true
+      cache_control: true
+      extended_thinking: true
+      vision: true
+
+  - vendor: anthropic
+    model: claude-sonnet-4-6
+    currency: usd
+    input_price_per_1k_tokens: 3.00
+    output_price_per_1k_tokens: 15.00
+    cache_read_price_per_1k_tokens: 0.30
+    cache_create_price_per_1k_tokens: 3.75
+    capabilities:
+      tools: true
+      cache_control: true
+      extended_thinking: true
+      vision: true
+
+  - vendor: openai
+    model: gpt-4o
+    currency: usd
+    input_price_per_1k_tokens: 2.50
+    output_price_per_1k_tokens: 10.00
+    capabilities:
+      tools: true
+      cache_control: false
+      extended_thinking: false
+      vision: false
+
+  - vendor: openai
+    model: o3
+    currency: usd
+    input_price_per_1k_tokens: 10.00
+    output_price_per_1k_tokens: 40.00
+    capabilities:
+      tools: true
+      cache_control: false
+      extended_thinking: false
+      vision: false
+
+  - vendor: ollama-local
+    model: qwen2.5-coder:7b
+    currency: usd
+    input_price_per_1k_tokens: 0
+    output_price_per_1k_tokens: 0
+    capabilities:
+      tools: false
+      cache_control: false
+      extended_thinking: false
+      vision: false
+
+  - vendor: vllm-local
+    model: llama3.1-405b
+    currency: usd
+    input_price_per_1k_tokens: 0
+    output_price_per_1k_tokens: 0
+    capabilities:
+      tools: true
+      cache_control: false
+      extended_thinking: false
+      vision: false
+
+  # DeepSeek pricing — fetched from https://api-docs.deepseek.com/zh-cn/quick_start/pricing 2026-05-06
+  # deepseek-v4-pro discounted (75% off until 2026-05-31 23:59 Beijing time):
+  # direct CNY pricing: CNY 3 per 1M input (cache miss), CNY 6 per 1M output.
+  # Converted to CNY fen per 1K: CNY 3 per 1M = 0.30 fen/1K input; CNY 6 per 1M = 0.60 fen/1K output.
+  - vendor: deepseek-direct
+    model: deepseek-v4-flash
+    currency: cny
+    input_price_per_1k_tokens: 0.10
+    output_price_per_1k_tokens: 0.40
+    capabilities:
+      tools: true
+      cache_control: false
+      extended_thinking: false
+      vision: false
+
+  - vendor: deepseek-direct
+    model: deepseek-v4-pro
+    currency: cny
+    input_price_per_1k_tokens: 0.30
+    output_price_per_1k_tokens: 0.60
+    capabilities:
+      tools: true
+      cache_control: false
+      extended_thinking: false
+      vision: false
+
+  # === QUARANTINED — NOT IN ACTIVE ROUTING ===
+  # GLM-4.7 pricing is UNVERIFIED. Attempted to fetch from https://open.bigmodel.cn/ and
+  # https://docs.bigmodel.cn/ on 2026-05-06; pricing table not accessible (redirect loop / 404).
+  # glm-anthropic-cn endpoint is registered in provider_endpoints but REMOVED from cn-default
+  # pool membership. Re-add to pool and replace these placeholder prices (0) with verified
+  # pricing from https://open.bigmodel.cn/ before routing production traffic.
+  # === QUARANTINED ENTRY ===
+  - vendor: bigmodel-direct
+    model: glm-4.7
+    currency: cny
+    input_price_per_1k_tokens: 0
+    output_price_per_1k_tokens: 0
+    capabilities:
+      tools: true
+      cache_control: false
+      extended_thinking: false
+      vision: false

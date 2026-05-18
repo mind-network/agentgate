@@ -1,0 +1,10 @@
+# teams.yaml — team metadata and budget caps
+
+teams:
+  - team_id: platform
+    name: Platform Engineering
+    budget_monthly_cap_cents: 0  # unlimited for platform
+
+  - team_id: dogfood
+    name: Dogfood Team
+    budget_monthly_cap_cents: 500000  # $5,000 monthly cap

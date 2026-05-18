@@ -1,0 +1,15 @@
+# Anthropic-wire-compatible error stream fixture: upstream overload.
+# Simulates rate limiting / overload before first content block completes.
+
+event: message_start
+data: {"type":"message_start","message":{"id":"msg_fixture_overload","type":"message","role":"assistant","model":"claude-sonnet-4-6","content":[],"stop_reason":null,"usage":null}}
+
+event: content_block_start
+data: {"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"I'll analyze the"}}
+
+event: aicg.error
+id: trace-fixture-overload-001
+data: {"schema_version":"1.0","trace_id":"trace-fixture-overload-001","code":"upstream_timeout","message":"upstream overload: request timed out after partial response","partial":true,"tokens_emitted_so_far":187}

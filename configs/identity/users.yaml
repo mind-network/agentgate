@@ -1,0 +1,17 @@
+# users.yaml — per-user identity mapping (admin-maintained)
+
+users:
+  - user_id: admin
+    team_id: platform
+    role: platform_admin
+    api_key_hash: ""  # populated at bootstrap
+
+  - user_id: dogfood-dev-1
+    team_id: dogfood
+    role: developer
+    api_key_hash: ""
+
+  - user_id: dogfood-dev-2
+    team_id: dogfood
+    role: developer
+    api_key_hash: ""

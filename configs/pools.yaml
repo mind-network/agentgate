@@ -1,0 +1,100 @@
+# pools.yaml — provider_endpoints registry + model pools (§9.1)
+# WARNING: configs/pools.yaml is a sensitive file (codeowners dual-sign required).
+# Any endpoint_id not registered in provider_endpoints → GW startup/reload fails.
+
+provider_endpoints:
+  anthropic-prod:
+    wire: anthropic
+    vendor: anthropic
+    url: "https://api.anthropic.com"
+    data_residency: us
+    trust_tier: vendor
+    key_ref: env://ANTHROPIC_API_KEY
+    supports:
+      streaming: true
+
+  openai-prod:
+    wire: openai
+    vendor: openai
+    url: "https://api.openai.com/v1"
+    data_residency: us
+    trust_tier: vendor
+    key_ref: env://OPENAI_API_KEY
+    supports:
+      streaming: true
+
+  ollama-cluster:
+    wire: openai_compat
+    vendor: ollama-local
+    url: "https://ollama-cluster.internal:11434/v1"
+    data_residency: on_prem
+    trust_tier: private
+    supports:
+      streaming: true
+
+  vllm-prod:
+    wire: openai_compat
+    vendor: vllm-local
+    url: "https://vllm-prod.internal:8000/v1"
+    data_residency: on_prem
+    trust_tier: private
+    supports:
+      streaming: true
+
+  deepseek-anthropic:
+    wire: anthropic_compat
+    vendor: deepseek-direct
+    url: "https://api.deepseek.com/anthropic"
+    data_residency: cn
+    trust_tier: vendor
+    key_ref: env://DEEPSEEK_API_KEY
+    supports:
+      streaming: true
+
+  glm-anthropic-cn:
+    wire: anthropic_compat
+    vendor: bigmodel-direct
+    url: "https://open.bigmodel.cn/api/anthropic"
+    data_residency: cn
+    trust_tier: vendor
+    key_ref: env://BIGMODEL_API_KEY
+    supports:
+      streaming: true
+
+pools:
+  cheap:
+    members:
+      - { endpoint_id: deepseek-anthropic, model: "deepseek-v4-flash", weight: 100 }
+    fallback_pool: standard
+    max_attempts: 2
+    timeout_ms: 60000
+
+  # per-provider adapter dispatch landed in HANDOFF-004; pool members may freely mix anthropic / openai / openai_compat endpoints
+  standard:
+    members:
+      - { endpoint_id: deepseek-anthropic, model: "deepseek-v4-flash", weight: 100 }
+    fallback_pool: strong
+    max_attempts: 3
+    timeout_ms: 90000
+
+  strong:
+    members:
+      - { endpoint_id: deepseek-anthropic, model: "deepseek-v4-pro", weight: 100 }
+    fallback_pool: null
+    max_attempts: 2
+    timeout_ms: 180000
+
+  private_strong:
+    members:
+      - { endpoint_id: vllm-prod, model: "llama3.1-405b", weight: 100 }
+    fallback_pool: null
+    max_attempts: 1
+    timeout_ms: 300000
+
+  cn-default:
+    members:
+      - { endpoint_id: deepseek-anthropic, model: "deepseek-v4-pro", weight: 100 }
+    # glm-anthropic-cn quarantined until pricing verified (see configs/pricing.yaml).
+    fallback_pool: null
+    max_attempts: 2
+    timeout_ms: 90000
